@@ -1,0 +1,33 @@
+name: Build site and archive
+on:
+  - workflow_dispatch
+  - push
+jobs:
+  build-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v3
+
+      - name: Setup Dependencies
+        run: pdm sync
+
+      - name: Build site
+        run: pdm run mkdocs build
+
+      - name: Zip files
+        run: zip -r release.zip site
+
+      - name: Archive Exports
+        uses: actions/upload-artifact@v3
+        with:
+          path: release.zip
+          retention-days: 7

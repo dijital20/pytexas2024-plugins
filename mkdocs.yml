@@ -1,0 +1,7 @@
+site_name: "Plugging in with pkgutil, importlib, inspect, and a little spit"
+
+theme:
+  name: readthedocs
+
+plugins:
+  - include-markdown
