@@ -1,0 +1,23 @@
+[project]
+name = "pytexas2024-plugins"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Josh Schneider", email = "josh.schneider@gmail.com"},
+]
+dependencies = [
+    "mkdocs>=1.5.3",
+    "mkdocs-include-markdown-plugin>=6.0.4",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.14",
+]
