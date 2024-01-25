@@ -1,7 +1,16 @@
 site_name: "Plugging in with pkgutil, importlib, inspect, and a little spit"
 
 theme:
-  name: readthedocs
+  name: material
+  palette:
+    primary: indigo
 
 plugins:
   - include-markdown
+
+markdown_extensions:
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+

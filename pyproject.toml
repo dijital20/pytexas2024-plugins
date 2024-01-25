@@ -8,6 +8,7 @@ authors = [
 dependencies = [
     "mkdocs>=1.5.3",
     "mkdocs-include-markdown-plugin>=6.0.4",
+    "mkdocs-material>=9.5.5",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
