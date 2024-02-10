@@ -3,7 +3,22 @@
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.formatOnType": true,
         "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true
+        "editor.formatOnSave": true,
+        "editor.rulers": [
+            {
+                "column": 80
+            }
+        ]
+    },
+    "[markdown]": {
+        "editor.rulers": [
+            {
+                "column": 80
+            },
+            {
+                "column": 120
+            }
+        ]
     },
     "autoDocstring.docstringFormat": "google-notypes",
     "editor.codeActionsOnSave": {
