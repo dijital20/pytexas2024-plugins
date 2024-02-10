@@ -7,15 +7,19 @@ from pathlib import Path
 from typing import Any, TypeVar
 
 LOG = logging.getLogger(__name__)
+
+FileInfoHandlerFunction = Callable[
+    [Path], Iterable[str]
+]  # This is the signature of a decoratable function.
+F = TypeVar(
+    "F", bound=FileInfoHandlerFunction
+)  # This is a TypeVar to indicate that we get out what we put in.
+
+
+# --- START Decorator ---
 ATTR_NAME = "_fileinfo_registered_type"
 
-# region Type Variables
-FileInfoHandlerFunction = Callable[[Path], Iterable[str]]  # This is the signature of a decoratable function.
-F = TypeVar("F", bound=FileInfoHandlerFunction)  # This is a TypeVar to indicate that we get out what we put in.
-# endregion
 
-
-# region Decorator
 def file_type(pattern: str) -> Callable[[F], F]:
     """Decorates a callable to indicate that it handles a certain type.
 
@@ -23,19 +27,23 @@ def file_type(pattern: str) -> Callable[[F], F]:
         pattern: Regex pattern of the file extension to match.
 
     Returns:
-        A decorator function that returns the original function, but with additional attributes to mark the function.
+        A decorator function that returns the original function, but with
+        additional attributes to mark the function.
     """
 
     def wrapper(func: F) -> F:
         """Wraps a callable to mark it for a given type."""
-        # Add an attribute to the callable that is a set of supported type patterns. If the attribute already exists
-        # and is a set, then just append to the pattern to the existing set.
+        # Add an attribute to the callable that is a set of supported type
+        # patterns. If the attribute already exists and is a set, then just
+        # append to the pattern to the existing set.
         LOG.debug("Registering %s to %s", func, pattern)
-        if isinstance((registered_types := getattr(func, ATTR_NAME, None)), set):
-            LOG.debug("Adding to list")
+        if isinstance(
+            (registered_types := getattr(func, ATTR_NAME, None)), set
+        ):
+            LOG.debug("Adding to existing set")
             registered_types.add(pattern)
         else:
-            LOG.debug("Creating new list")
+            LOG.debug("Creating new set")
             setattr(func, ATTR_NAME, {pattern})
 
         return func
@@ -43,23 +51,25 @@ def file_type(pattern: str) -> Callable[[F], F]:
     return wrapper
 
 
-# endregion
+# --- END Decorator ---
 
 
-# region Discovery
 def _is_plugin_func(obj: Any) -> bool:
-    """Predicate function for determining if a member is a plugin registered function.
+    """Predicate function for finding a plugin registered function.
 
     Args:
         obj: Object to test.
 
     Returns:
-        True if this is a function with the _fileinfo_registered_types attribute, and False otherwise.s
+        True if this is a function with the _fileinfo_registered_types
+        attribute, and False otherwise.
     """
     return inspect.isfunction(obj) and hasattr(obj, ATTR_NAME)
 
 
-def _find_functions_in_module(module_name: str) -> list[tuple[str, FileInfoHandlerFunction]]:
+def _find_functions_in_module(
+    module_name: str,
+) -> list[tuple[str, FileInfoHandlerFunction]]:
     """Find all of the functions within a given module by name.
 
     Args:
@@ -87,14 +97,20 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
     """Find all functions that can be registered to a type.
 
     Returns:
-        List of tuples, containing the type patterns and their associated functions.
+        List of tuples, containing the type patterns and their associated
+        functions.
     """
     found_handlers = []
 
     found_handlers += _find_functions_in_module(__name__)
 
     for _, module_name, is_pkg in pkgutil.iter_modules():
-        if not module_name.startswith("fileinfo") or not module_name.endswith("plugin"):
+        if not all(
+            (
+                module_name.startswith("fileinfo"),
+                module_name.endswith("plugin"),
+            )
+        ):
             LOG.debug("Skipping %s", module_name)
             continue
 
@@ -103,7 +119,9 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
             try:
                 module = importlib.import_module(module_name)
             except Exception:
-                LOG.debug("Skipping %s due to error", module_name, exc_info=True)
+                LOG.debug(
+                    "Skipping %s due to error", module_name, exc_info=True
+                )
             else:
                 for _, module_name, _ in pkgutil.walk_packages(module.__path__):
                     found_handlers += _find_functions_in_module(module_name)
@@ -114,10 +132,7 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
     return found_handlers
 
 
-# endregion
-
-
-# region Default handler
+# --- START Default handler ---
 @file_type(".*")
 def default(path: Path) -> Iterable[str]:
     """Default handler for any file type.
@@ -133,4 +148,4 @@ def default(path: Path) -> Iterable[str]:
     yield f"{path.stat().st_size} bytes"
 
 
-# endregion
+# --- END Default handler ---

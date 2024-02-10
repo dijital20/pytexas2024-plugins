@@ -7,8 +7,11 @@ application will just print information common to any file type... the name, loc
 
 ### Event
 
-Our `fileinfo` will **expose event, `found_type`, for each file extension that it encounters, which plugins should 
-respond to in order to provide additional information**.
+Our `fileinfo` will **expose a single event as it passes through each type**. 
+
+Since this is a single event system, I won't worry about creating some sort of eventing or callback system... instead, 
+the application will manage this event by iterating over the registered plugins and calling the appropriate plugins 
+based on file type.
 
 ### Plugin Discovery
 
@@ -16,62 +19,13 @@ Our `fileinfo` will **discover plugins on its own by checking for top-level modu
 end with `plugin`**. This is easiest for users, who simply have to install something like `fileinfo-images-plugin` or
 `fileinfo-text-plugin` to get access to the plugin.
 
-Our `fileinfo` will **provide a decorator that will register a callable with a given file extension**. This will "mark"
-the callable for the discovery to find and use. 
+Plugins for `fileinfo` **will be a callable that is passed a `Path` object of the file, and will return an iterable of
+`str` to print** (that signature is `#!python Callable[[Path], Iterable[str]]`). This will keep plugins simple and easy 
+to implement.
 
-```python
-from collections.abc import Callable, Iterable
-from pathlib import Path
-from typing import TypeVar
+**Any exceptions raised by callables will be logged at debug level and otherwise suppressed**.
 
-FileInfoHandlerFunction = Callable[[Path], Iterable[str]]  # This is the signature of a decoratable function.
-F = TypeVar("F", bound=FileInfoHandlerFunction)  # This is a TypeVar to indicate that we get out what we put in.
-
-
-def file_type(pattern: str) -> Callable[[F], F]:
-    """Decorates a callable to indicate that it handles a certain type.
-
-    Args:
-        pattern: Regex pattern of the file extension to match.
-
-    Returns:
-        A decorator function that returns the original function, but with additional attributes to mark the function.
-    """
-
-    def wrapper(func: F) -> F:
-        """Wraps a callable to mark it for a given type."""
-        # Add an attribute to the callable that is a set of supported type patterns. If the attribute already exists 
-        # and is a set, then just append to the pattern to the existing set.
-        LOG.debug("Registering %s to %s", func, pattern)
-        if isinstance(getattr(func, "_fileinfo_registered_types", None), set):
-            LOG.debug("Adding to list")
-            func._fileinfo_registered_types.add(pattern)
-        else:
-            LOG.debug("Creating new list")
-            func._fileinfo_registered_types = {pattern}
-
-        return func
-
-    return wrapper
-```
-
-Registered callables are expected to have the following signature:
-
-```python
-from collections.abc import Callable, Iterable
-from pathlib import Path
-
-# Decorated method function.
-Callable[[Path], Iterable[str]]
-```
-
-Any exceptions raised by callables will be logged at debug level and otherwise suppressed.
-
-All functions that can respond to a file extension will.
-
-### Plugin Usage
-
-Each 
+**All functions that can respond to a file extension will**.
 
 ### Example Usage
 

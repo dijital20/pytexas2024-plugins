@@ -13,7 +13,9 @@ LOG = logging.getLogger(__name__)
 def _get_command_line() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Get information on files.")
 
-    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output.")
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose output."
+    )
     parser.add_argument("path", nargs="+", type=Path, help="Paths to search.")
 
     return parser.parse_args()
@@ -21,7 +23,10 @@ def _get_command_line() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = _get_command_line()
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(message)s")
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(message)s",
+    )
 
     processors = find_all_functions()
 
