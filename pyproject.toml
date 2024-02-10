@@ -21,7 +21,7 @@ distribution = false
 dev = ["ruff>=0.1.14"]
 
 [tool.ruff]
-line-length = 120
+line-length = 80
 respect-gitignore = true
 select = ["I"]
 
