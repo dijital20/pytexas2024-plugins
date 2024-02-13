@@ -4,7 +4,6 @@ import argparse
 import logging
 import re
 from pathlib import Path
-from typing import Generator
 
 from .plugins import find_all_functions
 
