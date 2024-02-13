@@ -36,11 +36,21 @@ if __name__ == "__main__":
             if not child.is_file():
                 continue
 
+            LOG.debug("--> Processing file %s (%r)", child, child.suffix)
             for pattern, processor in processors:
                 if not re.match(pattern, child.suffix):
                     continue
 
-                for line in processor(child):
-                    LOG.info(line)
+                LOG.debug("==> Calling %s", processor)
+                try:
+                    LOG.info("\n".join(processor(child)))
+                except Exception:
+                    LOG.debug(
+                        "ERROR running %s on %s",
+                        processor,
+                        child,
+                        exc_info=True,
+                    )
 
+            LOG.debug("<-- Finished %s", child)
             LOG.info("")
