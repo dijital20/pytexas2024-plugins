@@ -1,15 +1,4 @@
 {
-    "[python]": {
-        "diffEditor.ignoreTrimWhitespace": false,
-        "editor.formatOnType": true,
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true,
-        "editor.rulers": [
-            {
-                "column": 80
-            }
-        ]
-    },
     "[markdown]": {
         "editor.rulers": [
             {
@@ -20,8 +9,23 @@
             }
         ]
     },
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            {
+                "column": 80
+            }
+        ]
+    },
     "autoDocstring.docstringFormat": "google-notypes",
     "editor.codeActionsOnSave": {
         "source.organizeImports": "always"
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "pyproject.toml": "pdm.lock,.pdm-python"
     }
 }
