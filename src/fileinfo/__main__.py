@@ -10,6 +10,7 @@ from .plugins import find_all_functions
 LOG = logging.getLogger(__name__)
 
 
+# --- START CLI ---
 def _get_command_line() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Get information on files.")
 
@@ -21,6 +22,10 @@ def _get_command_line() -> argparse.Namespace:
     return parser.parse_args()
 
 
+# --- END CLI ---
+
+
+# --- START Iterate paths ---
 def find_all_files(paths: list[Path]) -> list[Path]:
     """Find all of the file paths in a set of paths.
 
@@ -36,10 +41,15 @@ def find_all_files(paths: list[Path]) -> list[Path]:
             file_paths.add(path)
         else:
             for child in path.rglob("*"):
-                file_paths.add(child)
+                if child.is_file():
+                    file_paths.add(child)
     return sorted(file_paths)
 
 
+# --- END Iterate paths ---
+
+
+# --- START File processor ---
 def process_file(path: Path):
     """Process a single file path.
 
@@ -66,6 +76,9 @@ def process_file(path: Path):
     LOG.info("")
 
 
+# --- END File processor ---
+
+# --- START main ---
 if __name__ == "__main__":
     args = _get_command_line()
     logging.basicConfig(
@@ -77,3 +90,4 @@ if __name__ == "__main__":
 
     for path in find_all_files(args.path):
         process_file(path)
+# --- END main ---

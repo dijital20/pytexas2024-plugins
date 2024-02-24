@@ -54,6 +54,7 @@ def file_type(pattern: str) -> Callable[[F], F]:
 # --- END Decorator ---
 
 
+# --- START Predicate ---
 def _is_plugin_func(obj: Any) -> bool:
     """Predicate function for finding a plugin registered function.
 
@@ -67,6 +68,10 @@ def _is_plugin_func(obj: Any) -> bool:
     return inspect.isfunction(obj) and hasattr(obj, ATTR_NAME)
 
 
+# --- END Predicate ---
+
+
+# --- START Function Finder ---
 def _find_functions_in_module(
     module_name: str,
 ) -> list[tuple[str, FileInfoHandlerFunction]]:
@@ -93,6 +98,10 @@ def _find_functions_in_module(
     return found_handlers
 
 
+# --- END Function Finder ---
+
+
+# --- START Plugin Finder ---
 def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
     """Find all functions that can be registered to a type.
 
@@ -132,6 +141,9 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
 
     LOG.debug("<-- Found %d handler functions", len(found_handlers))
     return found_handlers
+
+
+# --- END Plugin Finder ---
 
 
 # --- START Default handler ---
