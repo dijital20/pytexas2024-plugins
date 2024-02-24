@@ -89,6 +89,40 @@ could set the plugins to be called for all files, and leave it to the developer 
 of file that it can handle. There are pros and cons to this, but I feel like the less code plugin developers have to
 write, the better.
 
+### Entry Points
+
+Entry points are something that has only recently come to my attention. There's definitely benefits, such as givine the
+tools to the plugin developer to control exposing their plugins instead of the host application having to go find them.
+
+More details on how this works can be found here:
+
+* https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/
+* https://setuptools.pypa.io/en/latest/userguide/entry_point.html
+
+The host application starts by defining a name (let's say `fileinfo` here) and the signature that a plugin has.
+
+The plugin developer would create a plugin function, say `handle_csv`, in the `fileinfo_csv` module. The plugin 
+developer would then have to add an entry to the `pyproject.toml` like this:
+
+```toml
+[project.entry-points.'fileinfo.plugins']
+csv = 'fileinfo_csv:handle_csv'
+```
+
+The host application can find these by:
+
+```python
+from importlib.metadata import find_entrypoints
+
+entry_points = find_entrypoints(group='fileinfo.plugins')
+```
+
+This mechanism puts the power and responsibility in the plugin developer's hands to "tell" the host application what
+plugins you provide. This provides a pro in allowing the plugin developer to control what loads and does not load,
+at the cost of the plugin developer having to explicitly define this.
+
+For this project though, let's get a little more dynamic.
+
 ### Decorator
 
 Decorators are awesome. In this case, a parameterized decorator could take the metadata that I want to keep track of,
