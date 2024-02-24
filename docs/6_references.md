@@ -11,9 +11,10 @@ Here are some useful links from all over.
 
 ## Packaging and Plugin Discovery
 
-* [:link: Creating and Discovering Plugins (packaging.python.org)](https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/)
-* [:link: Entry Points (setuptools.pypa.io)](https://setuptools.pypa.io/en/latest/userguide/entry_point.html)
-* [:link: Implementing a Simple Plugin Framework in Python (guidodiepen.nl)](https://www.guidodiepen.nl/2019/02/implementing-a-simple-plugin-framework-in-python/)
+* [:material-link: Creating and Discovering Plugins (packaging.python.org)](https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/)
+* [:material-link: Entry Points (setuptools.pypa.io)](https://setuptools.pypa.io/en/latest/userguide/entry_point.html)
+* [:material-link: Implementing a Simple Plugin Framework in Python (guidodiepen.nl)](https://www.guidodiepen.nl/2019/02/implementing-a-simple-plugin-framework-in-python/)
+* [:material-link: Pluggy](https://pluggy.readthedocs.io/en/latest/) ([:material-github: repo](https://github.com/pytest-dev/pluggy))
 
 ## About the Author
 
