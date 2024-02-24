@@ -101,6 +101,7 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
         functions.
     """
     found_handlers = []
+    LOG.debug("--> Finding handler plugins")
 
     found_handlers += _find_functions_in_module(__name__)
 
@@ -129,6 +130,7 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
         else:
             found_handlers += _find_functions_in_module(module_name)
 
+    LOG.debug("<-- Found %d handler functions", len(found_handlers))
     return found_handlers
 
 
@@ -144,7 +146,7 @@ def default(path: Path) -> Iterable[str]:
         Information on the file as lines of text.
     """
     yield f"{path.resolve()}"
-    yield f"{path.suffix.upper()} file"
+    yield f"{path.suffix.upper()} file" if path.suffix else "File"
     yield f"{path.stat().st_size} bytes"
 
 
