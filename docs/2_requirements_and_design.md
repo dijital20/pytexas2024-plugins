@@ -45,7 +45,6 @@ CSV file
 
 Our `fileinfo-text-plugin` will respond to events for `.txt` files, and expose the following information:
 
-* Identify then by the more user-friendly name "Text file"
 * Count the number of lines.
 * Count the number of words.
 
@@ -67,10 +66,9 @@ CSV file
 
 Our `fileinfo-csv-plugin` will respond to events for `.csv` files, and expose the following information:
 
-* Identify them by the more user-friendly name "Comma-Separated Values file"
 * Count the number of columns.
 * Count the number of rows.
-* Identify if there was an error parsing the file as a CSV, and report 0 for the counts.
+* If there was an error parsing the file as a CSV, and report 0 for the counts.
 
 ```
 > python -m fileinfo ./test_files
