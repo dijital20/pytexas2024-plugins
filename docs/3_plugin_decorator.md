@@ -18,6 +18,7 @@ To do this, I would probably build an abstract base class that defines the inter
 I've established methods for the events which are automatically called, so the ABC should define those methods and
 their signatures.
 
+Then I'd create a concrete implementation, which implements the ABC, but on its own, doesn't do anything.
 
 ```python
 import logging
@@ -65,10 +66,9 @@ class Plugin(PluginInterface):
         self._log.debug("on_cleanup running from %s", self)
 ```
 
-Then I'd create a concrete implementation, which implements the ABC, but on its own, doesn't do anything.
-
-The discovery mechanism just needs to be able to find subclasses of the plugin class, and then instantiate those. 
-Assuming the developer followed good SOLID principles and tbe ABC is doing its things, any subclasses should work.
+The discovery mechanism just needs to be able to find subclasses of the plugin ABC that aren't the concrete class, and 
+then instantiate those. Assuming the developer followed good SOLID principles and tbe ABC is doing its things, any 
+subclasses should work.
 
 On event, I'd just need to iterate through the loaded plugins, calling the appropriate event method.
 
