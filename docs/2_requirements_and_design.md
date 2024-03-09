@@ -2,8 +2,22 @@
 
 ## Base Application
 
-We're going to make an application to print information about files, called `fileinfo`, given a directory. The base 
-application will just print information common to any file type... the name, location, full path, and size.
+We're going to make an application called `fileinfo` to print information about files given a directory. By default, the 
+host application will just print information common to any file type... the full path, file type, and size.
+
+### Example Usage
+
+```plaintext
+> python -m fileinfo ./test_files
+
+./test_files/foo.txt
+TXT file
+123 bytes
+
+./test_files/foo.csv
+CSV file
+123 bytes
+```
 
 ### Event
 
@@ -27,20 +41,6 @@ to implement.
 
 **All functions that can respond to a file extension will**.
 
-### Example Usage
-
-```
-> python -m fileinfo ./test_files
-
-./test_files/foo.txt
-TXT file
-123 bytes
-
-./test_files/foo.csv
-CSV file
-123 bytes
-```
-
 ## Text plugin
 
 Our `fileinfo-text-plugin` will respond to events for `.txt` files, and expose the following information:
@@ -52,13 +52,13 @@ Our `fileinfo-text-plugin` will respond to events for `.txt` files, and expose t
 > python -m fileinfo ./test_files
 
 ./test_files/foo.txt
-Text file
+.TXT file
 123 bytes
-3 lines
-23 words
+Lines 3
+Words 23
 
 ./test_files/foo.csv
-CSV file
+.CSV file
 123 bytes
 ```
 
@@ -74,12 +74,12 @@ Our `fileinfo-csv-plugin` will respond to events for `.csv` files, and expose th
 > python -m fileinfo ./test_files
 
 ./test_files/foo.txt
-TXT file
+.TXT file
 123 bytes
 
 ./test_files/foo.csv
-Comma-Separated Values file
+.CSV file
 123 bytes
-3 columns
-4 rows
+Rows 3
+Columns 4
 ```

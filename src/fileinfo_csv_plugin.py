@@ -1,3 +1,4 @@
+# --- START fileinfo_csv_plugin ---
 """Plugin for fileinfo for CSV files."""
 
 from collections.abc import Iterable
@@ -22,3 +23,6 @@ def process_csv(path: Path) -> Iterable[str]:
 
     yield f"Rows {len(contents)}"
     yield f"Columns {max(len(r) for r in contents)}"
+
+
+# --- END fileinfo_csv_plugin ---

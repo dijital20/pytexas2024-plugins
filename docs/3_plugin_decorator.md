@@ -1,11 +1,11 @@
 # Creating the Plugin Decorator
 
-Spoiler alert: I'm going with a callable decorator here. Let's see what some of my other options were...
-
 ## Picking an approach
 
 I want to be able to find plugins, so I needed to give thought on how a plugin developer should approach creating one.
 Here are a few possible approaches:
+
+**Spoiler alert: I'm going with a callable decorator here. Let's see what some of my other options were...**
 
 ### Plugin Classes
 
@@ -96,8 +96,8 @@ tools to the plugin developer to control exposing their plugins instead of the h
 
 More details on how this works can be found here:
 
-* https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/
-* https://setuptools.pypa.io/en/latest/userguide/entry_point.html
+* [Creating and discovering plugins - packaging.python.org](https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/)
+* [Entry Points - setuptools.pypa.io](https://setuptools.pypa.io/en/latest/userguide/entry_point.html)
 
 The host application starts by defining a name (let's say `fileinfo` here) and the signature that a plugin has.
 
@@ -134,7 +134,7 @@ For something this simple, this seems to be a good way to go.
 ## The Decorator
 
 So we want a decorator to decorate callables which will respond to each file that matches a regular expression that is 
-provided to the decorator. This allows the plugind developer to control which functions are called for which file types.
+provided to the decorator. This allows the plugin developer to control which functions are called for which file types.
 
 ```python
 {% 
