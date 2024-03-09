@@ -1,13 +1,15 @@
 """Command line interface."""
 
+# --- START imports and globals ---
 import argparse
 import logging
 import re
 from pathlib import Path
 
-from .plugins import find_all_functions
+from .plugins import FileInfoHandlerFunction, find_all_functions
 
 LOG = logging.getLogger(__name__)
+# --- END imports and globals ---
 
 
 # --- START CLI ---
@@ -50,20 +52,25 @@ def find_all_files(paths: list[Path]) -> list[Path]:
 
 
 # --- START File processor ---
-def process_file(path: Path):
+def process_file(
+    path: Path,
+    processor_functions: list[tuple[str, FileInfoHandlerFunction]],
+):
     """Process a single file path.
 
     Args:
         path: Path of the file.
+        processor_functions: List of 2-element tuples, containing a file
+            extension regular expression, and a corresponding function.
     """
     LOG.debug("--> Processing file %s (%r)", path, path.suffix)
-    for pattern, processor in processors:
+    for pattern, processor in processor_functions:
         if not re.match(pattern, path.suffix):
             continue
 
         LOG.debug("==> Calling %s", processor)
         try:
-            LOG.info("\n".join(processor(path)))
+            LOG.info("\n".join(map(str, processor(path))))
         except Exception:
             LOG.debug(
                 "ERROR running %s on %s",
@@ -89,5 +96,5 @@ if __name__ == "__main__":
     processors = find_all_functions()
 
     for path in find_all_files(args.path):
-        process_file(path)
+        process_file(path, processors)
 # --- END main ---

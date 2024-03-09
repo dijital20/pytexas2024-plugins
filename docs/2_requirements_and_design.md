@@ -2,8 +2,22 @@
 
 ## Base Application
 
-We're going to make an application to print information about files, called `fileinfo`, given a directory. The base 
-application will just print information common to any file type... the name, location, full path, and size.
+We're going to make an application called `fileinfo` to print information about files given a directory. By default, the 
+host application will just print information common to any file type... the full path, file type, and size.
+
+### Example Usage
+
+```plaintext
+> python -m fileinfo ./test_files
+
+./test_files/foo.txt
+TXT file
+123 bytes
+
+./test_files/foo.csv
+CSV file
+123 bytes
+```
 
 ### Event
 
@@ -23,29 +37,14 @@ Plugins for `fileinfo` **will be a callable that is passed a `Path` object of th
 `str` to print** (that signature is `#!python Callable[[Path], Iterable[str]]`). This will keep plugins simple and easy 
 to implement.
 
-**Any exceptions raised by callables will be logged at debug level and otherwise suppressed**.
+**Any exceptions raised by calling a plugin will be logged at debug level and otherwise suppressed**.
 
 **All functions that can respond to a file extension will**.
-
-### Example Usage
-
-```
-> python -m fileinfo ./test_files
-
-./test_files/foo.txt
-TXT file
-123 bytes
-
-./test_files/foo.csv
-CSV file
-123 bytes
-```
 
 ## Text plugin
 
 Our `fileinfo-text-plugin` will respond to events for `.txt` files, and expose the following information:
 
-* Identify then by the more user-friendly name "Text file"
 * Count the number of lines.
 * Count the number of words.
 
@@ -53,13 +52,13 @@ Our `fileinfo-text-plugin` will respond to events for `.txt` files, and expose t
 > python -m fileinfo ./test_files
 
 ./test_files/foo.txt
-Text file
+.TXT file
 123 bytes
-3 lines
-23 words
+Lines 3
+Words 23
 
 ./test_files/foo.csv
-CSV file
+.CSV file
 123 bytes
 ```
 
@@ -67,21 +66,20 @@ CSV file
 
 Our `fileinfo-csv-plugin` will respond to events for `.csv` files, and expose the following information:
 
-* Identify them by the more user-friendly name "Comma-Separated Values file"
 * Count the number of columns.
 * Count the number of rows.
-* Identify if there was an error parsing the file as a CSV, and report 0 for the counts.
+* If there was an error parsing the file as a CSV, and report 0 for the counts.
 
 ```
 > python -m fileinfo ./test_files
 
 ./test_files/foo.txt
-TXT file
+.TXT file
 123 bytes
 
 ./test_files/foo.csv
-Comma-Separated Values file
+.CSV file
 123 bytes
-3 columns
-4 rows
+Rows 3
+Columns 4
 ```

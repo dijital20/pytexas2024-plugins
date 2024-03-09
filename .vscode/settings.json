@@ -27,5 +27,20 @@
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
         "pyproject.toml": "pdm.lock,.pdm-python"
-    }
+    },
+    "cSpell.words": [
+        "abstractmethod",
+        "argparse",
+        "fileinfo",
+        "getmembers",
+        "importlib",
+        "isfunction",
+        "posixpath",
+        "pypa",
+        "pyproject",
+        "pytest",
+        "rglob",
+        "setuptools",
+        "Traceback"
+    ]
 }

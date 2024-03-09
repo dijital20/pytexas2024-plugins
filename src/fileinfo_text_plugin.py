@@ -1,3 +1,4 @@
+# --- START fileinfo_text_plugin ---
 """Plugin for fileinfo for TXT files."""
 
 from collections.abc import Iterable
@@ -19,3 +20,6 @@ def process_txt(path: Path) -> Iterable[str]:
     contents = path.read_text()
     yield f"Lines {len(contents.split('\n'))}"
     yield f"Words {len(contents.split())}"
+
+
+# --- END fileinfo_text_plugin ---

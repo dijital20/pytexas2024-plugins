@@ -4,13 +4,13 @@
 
 In order to discover plugins, we need to be able to do the following:
 
-* Get a list of all of the accessible Python modules. These could be provided by the standard library, installed, or
+1. **Get a list of all of the accessible Python modules.** These could be provided by the standard library, installed, or
   just modules in the path.
-* For each module name we find, import that module, so we can search its local objects.
-  * If the module has submodules, we might want to crawl those. This could give the plugin developer more freedom to
-    structure the plugins wherever in the code makes sense.
-* Iterate through all of the objects in the module's namespace to find plugins. In this case, we need to find functions
-  that our decorator has "marked" as a plugin function.
+2. **For each module name we find, import that module, so we can search its local objects.**
+3. **If the module has submodules, we might want to crawl those.** This could give the plugin developer more freedom to
+  structure the plugins wherever in the code makes sense.
+4. **Iterate through all of the objects in the module's namespace to find plugins.** In this case, we need to find 
+  functions that our decorator has "marked" as a plugin function.
 
 ### Finding packages/modules using `pkgutil`
 
@@ -20,10 +20,10 @@ couple of good functions for this.
 #### `pkgutil.walk_packages`: Walking the structure
 
 The `pkgutil.walk_packages` allows you to iterate through every accessible package and module **by importing every 
-package**. This is good in that it will find EVERYTHING, but bad in that some modules actually execute behavior **on 
-import**, which can have a deleterious effect on your discovery. 
+package**. This is good in that it will find every module and submodule, but bad in that some modules actually execute 
+behavior **on import**, which can cause issues on your discovery. 
 
-An example of an adverse efffect is the `test_gdb` module, which tries to find and execute unit tests on import. This 
+An example of an adverse effect is the `test_gdb` module, which tries to find and execute unit tests on import. This 
 would at best kill your script right there, and at worst, begin executing unit tests.
 
 ```python
@@ -52,7 +52,7 @@ pattern. Once you have the names, now you need to import... and that's where the
 
 ### Importing a module given its name as a string using `importlib`
 
-In a normal time, you would do something like this:
+Normally you would import a module or package like this:
 
 ```python
 >>> import os.path
@@ -63,8 +63,8 @@ like this:
 
 ```python
 >>> import importlib
->>> m = "os.path"
->>> importlib.import_module(m)
+>>> module_name = "os.path"
+>>> importlib.import_module(module_name)
 <module 'posixpath' (frozen)>
 ```
 
@@ -78,14 +78,18 @@ for filtering through objects, including a bunch of useful "predicate functions"
 return `True` if they are the droids you're looking for, or `False` if not).
 
 We can use `inspect.getmembers` to get all of the members of the module, given we pass the module. We can also 
-optionally specify a predicate function, and `getmembers` will only return the members where the predicqte function
+optionally specify a predicate function, and `getmembers` will only return the members where the predicate function
 returns `True`.
 
 Since we're digging for functions, we will use the `inspect.isfunction` predicate function.
 
 ## Putting it all together
 
-So, let's work backwards. Our decorator works by adding an attribute containing a set of regex patterns for the files
+So, let's work backwards. 
+
+### Step 1: Identify a plugin function
+
+Our decorator works by adding an attribute containing a set of regex patterns for the files
 that the function supports, so let's start by creating a predicate function to define the function. Remember that
 `ATTR_NAME` constant we defined previously? This code will use that.
 
@@ -98,10 +102,13 @@ that the function supports, so let's start by creating a predicate function to d
 %}
 ```
 
-Our predicate function here should be useful by `inspect.getmembers` for finding functions with our attribute. Next,
-we'll want to load and search a module given its name. To do this, we'll create another function to import the module
-using `importlib.import_module` and `inspect.getmembers` to search. We'll do some exception handling around the import,
-just in case there is bad code in there, so that the host application doesn't crash.
+Our predicate function here should be useful by `inspect.getmembers` for finding functions with our attribute. 
+
+### Step 2: Load plugin functions from a module given its name
+
+Next, we'll want to load and search a module given its name. To do this, we'll create another function to import the 
+module using `importlib.import_module` and `inspect.getmembers` to search. We'll do some exception handling around the 
+import, just in case there is bad code in there, so that the host application doesn't crash.
 
 ```python
 {% 
@@ -112,7 +119,9 @@ just in case there is bad code in there, so that the host application doesn't cr
 %}
 ```
 
-Now tha that we can load a module given its name, we should go find modules to load. This is the top level of our plugin
+### Step 3: Find modules that match our plugin name and search them for plugin functions
+
+Now that we can load a module given its name, we should go find modules to load. This is the top level of our plugin
 search. This will use `pkgutil.iter_modules` to iterate through the top level modules, looking for ones that start with 
 `fileinfo` and end with `plugin`. Once we have those, we will use `pkgutil.walk_packages` to walk the packages and
 modules inside, and pass each module we find to our function above to find.
@@ -127,7 +136,7 @@ modules inside, and pass each module we find to our function above to find.
 ```
 
 The end result of all of this is a list of 2-element tuples; the first element is the regex that the file suffix needs
-to match, and the second selement is the corresponding plugin function. Our main block code can load the plugins,
+to match, and the second element is the corresponding plugin function. Our main block code can load the plugins,
 and then for each file it encounters, run plugin functions for that file type.
 
 Note that we added our default handler to the top of the list with this line:
@@ -136,4 +145,4 @@ Note that we added our default handler to the top of the list with this line:
 found_handlers += _find_functions_in_module(__name__)
 ```
 
-Now that our plugins are loaded, let's put the last of this together with main block code.
+Now that our plugins are loaded, let's build our plugins, and then put the last of this together with main block code.

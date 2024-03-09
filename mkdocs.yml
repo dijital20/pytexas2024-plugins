@@ -1,13 +1,28 @@
 site_name: "Plugging in with pkgutil, importlib, inspect, and a little spit"
 
+# theme:
+#   name: material
+#   palette:
+#     primary: indigo
+
 theme:
   name: material
-  palette:
-    primary: indigo
+  palette: 
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 plugins:
   - include-markdown
-  - mermaid2
+  - mermaid2:
+      version: 10.9.0
 
 markdown_extensions:
   - attr_list
@@ -20,4 +35,9 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      # make exceptions to highlighting of code:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid_custom

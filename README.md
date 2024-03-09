@@ -3,6 +3,8 @@
 This repository contains the content for my PyTexas 2024 talk, "Plugging in with pkgutil, importlib, inspect, and a 
 little spit".
 
+Check out the **Releases** section to download a copy of all of the content, beautifull rendered with mkdocs.
+
 ## Building Content
 
 This repository using `pdm` for dependency management, and `mkdocs` for document rendering. To use this repository, you
