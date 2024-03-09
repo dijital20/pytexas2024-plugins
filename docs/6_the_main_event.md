@@ -4,12 +4,21 @@ To make a Python package runnable, you can add a `__main__.py`. When using `pyth
 searches for `<package name>`, and then looks for the `__main__.py` in the package, executing it. So, our `fileinfo`
 module needs to do the following things:
 
-* Parse the user input.
-* Load our handler functions, both from the module itself, and from the plugins.
-* Turn the input paths from the user into a list of file paths.
-* For each file, we should process it against each matching handler functions to give data to the user.
+1. Parse the user input.
+2. Load our handler functions, both from the module itself, and from the plugins.
+3. Turn the input paths from the user into a list of file paths.
+4. For each file, we should process it against each matching handler functions to give data to the user.
 
-I like to break each task into a simple function.
+I like to break each task into a simple function. Here are the imports and globals that we're going to use:
+
+```python
+{% 
+    include "../src/fileinfo/__main__.py" 
+    start="# --- START imports and globals ---"
+    end="# --- END imports and globals ---"
+    trailing-newlines=false
+%}
+```
 
 ## Processing command line input
 

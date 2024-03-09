@@ -37,7 +37,7 @@ Plugins for `fileinfo` **will be a callable that is passed a `Path` object of th
 `str` to print** (that signature is `#!python Callable[[Path], Iterable[str]]`). This will keep plugins simple and easy 
 to implement.
 
-**Any exceptions raised by callables will be logged at debug level and otherwise suppressed**.
+**Any exceptions raised by calling a plugin will be logged at debug level and otherwise suppressed**.
 
 **All functions that can respond to a file extension will**.
 

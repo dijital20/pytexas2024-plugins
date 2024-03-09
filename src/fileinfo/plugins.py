@@ -10,7 +10,7 @@ LOG = logging.getLogger(__name__)
 
 FileInfoHandlerFunction = Callable[
     [Path], Iterable[str]
-]  # This is the signature of a decoratable function.
+]  # This is the signature of a function that could be decorated.
 F = TypeVar(
     "F", bound=FileInfoHandlerFunction
 )  # This is a TypeVar to indicate that we get out what we put in.
@@ -112,9 +112,12 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
     found_handlers = []
     LOG.debug("--> Finding handler plugins")
 
+    # Add the default behavior
     found_handlers += _find_functions_in_module(__name__)
 
+    # Search all top-level packages/modules
     for _, module_name, is_pkg in pkgutil.iter_modules():
+        # If it doesn't start with fileinfo and end with plugin, skip it!
         if not all(
             (
                 module_name.startswith("fileinfo"),
@@ -125,6 +128,7 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
             continue
 
         if is_pkg:
+            # If this is a package, walk it, so we can search each submodule
             LOG.debug("Importing %s", module_name)
             try:
                 module = importlib.import_module(module_name)

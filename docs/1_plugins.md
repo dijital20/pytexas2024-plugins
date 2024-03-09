@@ -10,10 +10,6 @@ For instance, a web browser provides GUI controls for going backwards, forwards,
 These activities generate **events**, or signals that something has happened. **Plugins** can respond to these events, 
 performing some activity.
 
-Plugins are designed to be optional (they can be there or not be there, and the host application still works). A host
-application need only load the plugins, provide a mechanism to allow plugins to associate themselves with events, and 
-then fire the events when the action occurs.
-
 ```mermaid
 graph LR
     user[User]
@@ -46,3 +42,7 @@ graph LR
     event3 -- responds to --> plugin2
     event3 -- responds to --> plugin3
 ```
+
+Plugins are designed to be optional (they can be there or not be there, and the host application still works). A host
+application need only load the plugins, provide a mechanism to allow plugins to associate themselves with events, and 
+then fire the events when the action occurs.

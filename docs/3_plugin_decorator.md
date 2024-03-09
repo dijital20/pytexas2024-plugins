@@ -18,8 +18,6 @@ To do this, I would probably build an abstract base class that defines the inter
 I've established methods for the events which are automatically called, so the ABC should define those methods and
 their signatures.
 
-Then I'd create a concrete implementation, which implements the ABC, but on its own, doesn't do anything.
-
 ```python
 import logging
 from abc import ABC, abstractmethod
@@ -43,7 +41,11 @@ class PluginInterface(ABC):
     @abstractmethod
     def on_cleanup(self):
         pass
+```
 
+Then I'd create a concrete implementation, which implements the ABC, but on its own, doesn't do anything.
+
+```python
 # A concrete implementation suitable for subclassing, which also provides a 
 # logger at the self._log attribute.
 # 
@@ -67,7 +69,7 @@ class Plugin(PluginInterface):
 ```
 
 The discovery mechanism just needs to be able to find subclasses of the plugin ABC that aren't the concrete class, and 
-then instantiate those. Assuming the developer followed good SOLID principles and tbe ABC is doing its things, any 
+then instantiate those. Assuming the developer followed good SOLID principles and the ABC is doing its thing, any 
 subclasses should work.
 
 On event, I'd just need to iterate through the loaded plugins, calling the appropriate event method.
@@ -76,12 +78,12 @@ On event, I'd just need to iterate through the loaded plugins, calling the appro
 
 Similar to the way `pytest` does things, I could just specify special "magic" functions. These would need to have a 
 specific name, signature, and return type. Discovery is as simple as looking for modules containing functions of the
-right name. If you insist on things like type hints, you might also add checks that the signature is compatibile and
+right name. If you insist on things like type hints, you might also add checks that the signature is compatible and
 that the return type is consistent.
 
 You have the same issue with functions above... any state would need to be handled in the global scope of the module
-which can get messy, or instantiate a class to handle that. Generally, I am not a fan of merely importing a module
-creating instances of a class willy nilly, but it is a way to keep the scope clean.
+which can get messy, or instantiate a class to handle that. Generally, I am not a fan of instances of a class being 
+created merely by importing a module, but it is a way to keep the scope clean.
 
 It's also hard to apply additional metadata. For instance, in this case, the host application needs to know what kinds
 of files the plugin can apply to. This could be covered in the module's global scope, but that is, again, messy. Or I
@@ -89,9 +91,13 @@ could set the plugins to be called for all files, and leave it to the developer 
 of file that it can handle. There are pros and cons to this, but I feel like the less code plugin developers have to
 write, the better.
 
+This could work much better the way `pytest` uses it, where plugins aren't discovered by combing the codebase, but 
+instead, present in the things you are running. In that case, these are less plugins, and more hooks into the host
+application.
+
 ### Entry Points
 
-Entry points are something that has only recently come to my attention. There's definitely benefits, such as givine the
+Entry points are something that has only recently come to my attention. There's definitely benefits, such as giving the
 tools to the plugin developer to control exposing their plugins instead of the host application having to go find them.
 
 More details on how this works can be found here:
@@ -133,8 +139,9 @@ For something this simple, this seems to be a good way to go.
 
 ## The Decorator
 
-So we want a decorator to decorate callables which will respond to each file that matches a regular expression that is 
-provided to the decorator. This allows the plugin developer to control which functions are called for which file types.
+So we want a decorator to decorate callable objects which will respond to each file that matches a regular expression 
+that is provided to the decorator. This allows the plugin developer to control which functions are called for which file 
+types.
 
 ```python
 {% 
@@ -146,7 +153,7 @@ provided to the decorator. This allows the plugin developer to control which fun
 ```
 
 This decorator works by taking in a callable, and either adds a new `_fileinfo_registered_type` attribute with a new
-set of regex patterns, or appends to an existing set if the attribute exists and is a set; and then return the original
+set of regex patterns or appends to an existing set if the attribute exists and is a set; and then returns the original
 callable. This allows us to "tag" the callable to a specific file type.
 
 ## Applying the Decorator
