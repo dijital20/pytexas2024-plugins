@@ -7,7 +7,8 @@ theme:
 
 plugins:
   - include-markdown
-  - mermaid2
+  - mermaid2:
+      version: 10.9.0
 
 markdown_extensions:
   - attr_list
@@ -20,4 +21,9 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      # make exceptions to highlighting of code:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid_custom
