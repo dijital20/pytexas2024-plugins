@@ -81,7 +81,7 @@ def _find_functions_in_module(
         List of matching functions.
     """
     found_handlers = []
-    LOG.debug("Checking %s", module_name)
+    LOG.debug("Importing %s", module_name)
     try:
         module = importlib.import_module(module_name)
     except Exception:
@@ -126,7 +126,7 @@ def find_all_functions() -> list[tuple[str, FileInfoHandlerFunction]]:
 
         if is_pkg:
             # If this is a package, walk it, so we can search each submodule
-            LOG.debug("Importing %s", module_name)
+            LOG.debug("Importing %s for submodules", module_name)
             try:
                 module = importlib.import_module(module_name)
             except Exception:
