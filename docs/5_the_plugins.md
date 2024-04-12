@@ -4,7 +4,7 @@ Implementing the plugins is pretty straightforward. We just need to import the `
 `fileinfo.plugins`, and apply it to a function. The function just needs to take a `Path` object and return an iterable
 of strings to print to the console, so a generator is good here.
 
-Both functions use the regular expression patterns `"\.txt"` and `"\.csv"` respectively. This means the plugins will 
+Both functions use the regular expression patterns `r"\.txt"` and `r"\.csv"` respectively. This means the plugins will 
 only respond to files that end in `.txt` and `.csv`. In case you are unfamiliar with regular expressions, `\.` matches a 
 literal period, while `.` would match any character.
 
@@ -35,4 +35,5 @@ spaces.
 ```
 
 This function makes use of the `reader` from the `csv` module. It counts rows by counting the number of list elements,
-and counts columns by the max of the number of elements in each element (this is so that, if a csv has irregular).
+and counts columns by the max of the number of elements in each element (this is so that, if a csv has irregular 
+columns, it does not break the plugin).
