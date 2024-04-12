@@ -6,8 +6,6 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any, TypeVar
 
-LOG = logging.getLogger(__name__)
-
 FileInfoHandlerFunction = Callable[
     [Path], Iterable[str]
 ]  # This is the signature of a function that could be decorated.
@@ -17,14 +15,15 @@ F = TypeVar(
 
 
 # --- START Decorator ---
+LOG = logging.getLogger(__name__)
 ATTR_NAME = "_fileinfo_registered_type"
 
 
-def file_type(pattern: str) -> Callable[[F], F]:
+def file_type(*patterns: str) -> Callable[[F], F]:
     """Decorates a callable to indicate that it handles a certain type.
 
     Args:
-        pattern: Regex pattern of the file extension to match.
+        pattern: Regex patterns of the file extension to match.
 
     Returns:
         A decorator function that returns the original function, but with
@@ -33,18 +32,16 @@ def file_type(pattern: str) -> Callable[[F], F]:
 
     def wrapper(func: F) -> F:
         """Wraps a callable to mark it for a given type."""
-        # Add an attribute to the callable that is a set of supported type
-        # patterns. If the attribute already exists and is a set, then just
-        # append to the pattern to the existing set.
-        LOG.debug("Registering %s to %s", func, pattern)
+        LOG.debug("Registering %s to %s", func, patterns)
         if isinstance(
-            (registered_types := getattr(func, ATTR_NAME, None)), set
+            (registered_types := getattr(func, ATTR_NAME, None)),
+            set,
         ):
             LOG.debug("Adding to existing set")
-            registered_types.add(pattern)
+            registered_types.update(patterns)
         else:
             LOG.debug("Creating new set")
-            setattr(func, ATTR_NAME, {pattern})
+            setattr(func, ATTR_NAME, {*patterns})
 
         return func
 

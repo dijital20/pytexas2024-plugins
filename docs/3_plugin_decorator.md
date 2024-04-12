@@ -1,4 +1,8 @@
-# Creating the Plugin Decorator
+# Designing Plugins
+
+After requirements, it's good to sit down and think through the design. There are many ways to solve any given problem,
+but the right way is the one that accomplishes the most of your requirements, while leaving the most room and
+flexibility to grow.
 
 ## Picking an approach
 
@@ -14,9 +18,10 @@ via hierarchy, and can be mutated via subclassing. This is my favored approach f
 may be more numerous and diverse kinds of events) or when I think plugins may want to manage a state. Sure, a function
 can manage the state in global, but it's messy... classes are much cleaner.
 
-To do this, I would probably build an abstract base class that defines the interface of a plugin. In most approaches,
-I've established methods for the events which are automatically called, so the ABC should define those methods and
-their signatures.
+To do this, I would probably build an **Abstract Base Class (ABC)** that defines the interface of a plugin. An ABC is
+a great way to give developers feedback on how their plugin classes should be structured. In most approaches, I have 
+established methods for the events which are automatically called, so the ABC should define those methods and their 
+signatures.
 
 ```python
 import logging
@@ -137,6 +142,8 @@ the attribute that I need, and parse the information out of it.
 
 For something this simple, this seems to be a good way to go.
 
+---
+
 ## The Decorator
 
 So we want a decorator to decorate callable objects which will respond to each file that matches a regular expression 
@@ -154,7 +161,8 @@ types.
 
 This decorator works by taking in a callable, and either adds a new `_fileinfo_registered_type` attribute with a new
 set of regex patterns or appends to an existing set if the attribute exists and is a set; and then returns the original
-callable. This allows us to "tag" the callable to a specific file type.
+callable. This allows us to "tag" the callable to a specific file type. This also allows us to use the decorator on
+a function more than once to register it to more than 1 file type pattern.
 
 ## Applying the Decorator
 
