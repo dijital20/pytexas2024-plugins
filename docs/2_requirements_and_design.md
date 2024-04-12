@@ -1,21 +1,28 @@
-# Requirements and Design
+# Requirements
+
+To explore the concept, let's define an application and some plugins.
 
 ## Base Application
 
-We're going to make an application called `fileinfo` to print information about files given a directory. By default, the 
-host application will just print information common to any file type... the full path, file type, and size.
+We're going to make an application called `fileinfo` that takes one or more paths, and prints information about all 
+files found there. By default, the host application will just print information common to any file type... the full 
+path, file type, and size.
+
+The host application will be delivered as an executable Python package, so that the user can use `python -m <package>`
+to execute it. Our host application will use `logging` for logging, and will provide a `--verbose`/`-v` argument to
+output verbose logging.
 
 ### Example Usage
 
 ```plaintext
 > python -m fileinfo ./test_files
 
-./test_files/foo.txt
-TXT file
+/my/path/test_files/foo.txt
+.TXT file
 123 bytes
 
-./test_files/foo.csv
-CSV file
+/my/path/test_files/foo.csv
+.CSV file
 123 bytes
 ```
 
@@ -41,23 +48,27 @@ to implement.
 
 **All functions that can respond to a file extension will**.
 
+Since we are using `logging`, plugins can generate log output by creating a `Logger` instance and logging to it. **It
+is recommended that this logging be at `debug` level, as any logging at `info` level or above will be output to the 
+user at runtime.**
+
 ## Text plugin
 
 Our `fileinfo-text-plugin` will respond to events for `.txt` files, and expose the following information:
 
-* Count the number of lines.
-* Count the number of words.
+* Count the number of lines (substrings split by newlines).
+* Count the number of words (non-empty, non-space substrings split by spaces).
 
 ```
 > python -m fileinfo ./test_files
 
-./test_files/foo.txt
+/my/path/test_files/foo.txt
 .TXT file
 123 bytes
 Lines 3
 Words 23
 
-./test_files/foo.csv
+/my/path/test_files/foo.csv
 .CSV file
 123 bytes
 ```
@@ -73,11 +84,11 @@ Our `fileinfo-csv-plugin` will respond to events for `.csv` files, and expose th
 ```
 > python -m fileinfo ./test_files
 
-./test_files/foo.txt
+/my/path/test_files/foo.txt
 .TXT file
 123 bytes
 
-./test_files/foo.csv
+/my/path/test_files/foo.csv
 .CSV file
 123 bytes
 Rows 3
