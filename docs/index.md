@@ -7,6 +7,6 @@ and how we might discover, load, and use plugins.
 
 ## About the Speaker
 
-[:material-github: dijital20](https://github.com/dijital20) [:material-mastodon: @diji@mastodon.social](https://mastodon.social/@diji)
+[:material-github: dijital20](https://github.com/dijital20) [:material-mastodon: @diji@mastodon.social](https://mastodon.social/@diji) [:simple-discord: dijital20](https://discord.com)
 
 **Josh Schneider** is a Python developer, mentor, test automation engineer, quoter of the movies, drinker of coffee and beer, and father of 2 amazing humans.
