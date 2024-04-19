@@ -12,16 +12,18 @@ In order to discover plugins, we need to be able to do the following:
 4. **Iterate through all of the objects in the module's namespace to find plugins.** In this case, we need to find 
   functions that our decorator has "marked" as a plugin function.
 
+---
+
 ### Finding packages/modules using `pkgutil`
 
 First off, we need to be able to iterate through the installed packages and modules. The `pkgutil` module provides a
 couple of good functions for this.
 
-#### `pkgutil.walk_packages`: Walking the structure
+#### `pkgutil.walk_packages`: Walking into the structure
 
 The `pkgutil.walk_packages` allows you to iterate through every accessible package and module **by importing every 
 package**. This is good in that it will find every module and submodule, but bad in that some modules actually execute 
-behavior **on import**, which can cause issues on your discovery. 
+behavior **_on import_**, which can cause issues on your discovery. 
 
 An example of an adverse effect is the `test_gdb` module, which tries to find and execute unit tests on import. This 
 would at best kill your script right there, and at worst, begin executing unit tests.
@@ -50,6 +52,8 @@ a top-level package) will not be visible. In order to get these, the interpreter
 package/module will be exposed as a string name, so it should be easy to search for names that match a predefined
 pattern. Once you have the names, now you need to import... and that's where the next library comes in.
 
+---
+
 ### Importing a module given its name as a string using `importlib`
 
 Normally you would import a module or package like this:
@@ -71,17 +75,20 @@ like this:
 This would give you the module as an object. From there, you need to filter through its members to find plugin functions
 and to do that, you might want to use `inspect`.
 
+---
+
 ### Searching the module for plugins using `inspect`
 
 Once you have imported a module, you can use `inspect` to filter its namespace. The `inspect` library provides functions
 for filtering through objects, including a bunch of useful "predicate functions" (Functions that take the object and
 return `True` if they are the droids you're looking for, or `False` if not).
 
-We can use `inspect.getmembers` to get all of the members of the module, given we pass the module. We can also 
-optionally specify a predicate function, and `getmembers` will only return the members where the predicate function
-returns `True`.
+We can use `inspect.getmembers` to get all of the members of the module. We can also optionally specify a predicate 
+function, and `getmembers` will only return the members where the predicate function returns `True`.
 
 Since we're digging for functions, we will use the `inspect.isfunction` predicate function.
+
+---
 
 ## Putting it all together
 

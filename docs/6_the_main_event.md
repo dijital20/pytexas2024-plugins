@@ -20,7 +20,7 @@ I like to break each task into a simple function. Here are the imports and globa
 %}
 ```
 
-## Processing command line input
+## Step 1: Processing command line input
 
 I like `argparse`. Once you learn its API, it's pretty easy to setup everything from a simple command line interface,
 to a complex multi-subcommand interface. It's flexible, and best of all, it is part of the standard library. We'll
@@ -54,7 +54,14 @@ options:
 The output object contains a `path` attribute with a list of the paths passed in, and a `verbose` attribute that will
 be a `bool` indicating whether the user wants verbose output.
 
-## Turning paths into a list of file paths
+After we get this output, we really should setup the logging output.
+
+## Step 2: Loading plugins
+
+This is already handled by `find_all_functions` from `fileinfo.plugins`. We just need to call it to find and load the 
+plugins.
+
+## Step 3: Turning paths into a list of file paths
 
 Once we have our input paths, we want to turn them into a list of file paths. The user might give us paths to files or
 folders, so we need to handle that. Also note, that the user could have annoyingly passed us paths that intersect,
@@ -77,12 +84,12 @@ such as passing us both a parent and child path. To combat this, we're gonna do 
 
 What should remain is a sorted list of file `Path` objects.
 
-## Processing each file
+## Step 4: Processing each file
 
 Now let's define a function to handle each file. The function should take care of iterating through handler functions
-and their patterns, checking if the file suffix matches the pattern, and if it does, running the handler against the
-`Path` object. We'll add error handling around each handler function, so that a misbehaving handler doesn't crash the
-host application.
+and their patterns, checking if the file suffix (the last extension) matches the pattern, and if it does, running the 
+handler against the `Path` object. We'll add error handling around each handler function, so that a misbehaving handler 
+doesn't crash the host application.
 
 ```python
 {% 
