@@ -52,6 +52,7 @@ def file_type(*patterns: str) -> Callable[[F], F]:
 
 
 # --- START Predicate ---
+# ATTR_NAME defined in previous example...
 def _is_plugin_func(obj: Any) -> bool:
     """Predicate function for finding a plugin registered function.
 
