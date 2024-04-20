@@ -11,8 +11,10 @@ In Python, this could be really easy.
 ```python
 import logging
 from copy import deepcopy
+from typing import ParamSpec
 
 LOG = logging.getLogger(__name__)
+P = ParamSpec("P")
 
 class Event:
     """Represents an event that can be subscribed to or published."""
@@ -26,7 +28,7 @@ class Event:
         self.name = name
         self.subscribers = set()
     
-    def subscribe(self, func: Callable) -> Callable:
+    def subscribe(self, func: Callable[[P], None]) -> Callable[[P], None]:
         """Subscribe a function to the event.
 
         Args:
@@ -39,7 +41,7 @@ class Event:
         LOG.info("%s: Subscribed %s", self.name, func)
         return func
 
-    def unsubscribe(self, func: Callable) -> Callable:
+    def unsubscribe(self, func: Callable[[P], None]) -> Callable[[P], None]:
         """Unsubscribe a function from the event.
 
         Args:
@@ -52,8 +54,12 @@ class Event:
         LOG.info("%s: Unsubscribed %s", self.name, func)
         return func
 
-    def publish(self, *args, **kwargs):
-        """Call each subscriber with a copy of the arguments."""
+    def publish(self, *args: P.args, **kwargs: P.kwargs) -> None:
+        """Call each subscriber with a copy of the arguments.
+        
+        Args:
+            args, kwargs: Copies passed to subscribers.
+        """
         LOG.debug("Publishing to %d subscribers", len(self.subscribers))
         for subscriber in self.subscribers:
             LOG.debug("Calling %s", subscriber)
@@ -105,7 +111,7 @@ class Event:
 
     ...
 
-    def __call__(self, func: Callable) -> Callable:
+    def __call__(self, func: Callable[[P], None]) -> Callable[[P], None]:
         """Turns the instance into a decorator."""
         return self.subscribe(func)
 
