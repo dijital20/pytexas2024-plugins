@@ -3,8 +3,8 @@
 For larger systems, where you have more than one event, you may want to consider creating an event. Unlike other 
 languages like C#, Python does not have a native event type, but making one is not hard.
 
-"PubSub" is a common event architecture. Consumers that want to consume an event *subscribe* to the event. When the 
-event is fired, it is *published* and sent to each of the consumers.
+"PubSub" is a common event architecture. Consumers that want to consume an event **subscribe** to the event. When the 
+event is fired, it is **published** and sent to each of the consumers.
 
 In Python, this could be really easy.
 
@@ -90,7 +90,6 @@ def process_new_file(path: Path):
 @on_start.subscribe
 def setup():
     ...
-
 
 @on_finish.subscribe
 def cleanup():
