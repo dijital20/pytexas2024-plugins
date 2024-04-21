@@ -34,13 +34,13 @@ graph LR
     host -- fires --> event2
     host -- fires --> event3
 
-    event1 -- responds to --> plugin1
+    event1 <-. responds to .-> plugin1
 
-    event2 -- responds to --> plugin1
-    event2 -- responds to --> plugin3
+    event2 <-. responds to .-> plugin1
+    event2 <-. responds to .-> plugin3
 
-    event3 -- responds to --> plugin2
-    event3 -- responds to --> plugin3
+    event3 <-. responds to .-> plugin2
+    event3 <-. responds to .-> plugin3
 ```
 
 Plugins are designed to be optional (they can be there or not be there, and the host application still works). A host
