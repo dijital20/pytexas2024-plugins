@@ -6,12 +6,10 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any, TypeVar
 
-FileInfoHandlerFunction = Callable[
-    [Path], Iterable[str]
-]  # This is the signature of a function that could be decorated.
-F = TypeVar(
-    "F", bound=FileInfoHandlerFunction
-)  # This is a TypeVar to indicate that we get out what we put in.
+# This is the signature of a function that could be decorated.
+FileInfoHandlerFunction = Callable[[Path], Iterable[str]]
+# This is a TypeVar to indicate that we get out what we put in.
+F = TypeVar("F", bound=FileInfoHandlerFunction)
 
 
 # --- START Decorator ---
