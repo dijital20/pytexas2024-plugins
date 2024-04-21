@@ -52,7 +52,11 @@ Since we are using `logging`, plugins can generate log output by creating a `Log
 is recommended that this logging be at `debug` level, as any logging at `info` level or above will be output to the 
 user at runtime.**
 
-## Text plugin
+## Plugins
+
+Let's build 2 plugins, just to show we're serious.
+
+### Text plugin
 
 Our `fileinfo-text-plugin` will respond to events for `.txt` files, and expose the following information:
 
@@ -73,7 +77,7 @@ Words 23
 123 bytes
 ```
 
-## CSV plugin
+### CSV plugin
 
 Our `fileinfo-csv-plugin` will respond to events for `.csv` files, and expose the following information:
 
